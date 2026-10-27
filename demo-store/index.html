@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuraGear Store — YouPI Gateway Live Integration</title>
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- OFFICIAL YOUPI PG UNIVERSAL ONE-SCRIPT INTEGRATION -->
+  <script 
+    src="http://localhost:7000/youpi.js"
+    data-youpi-key="00000000-0000-0000-0000-000000000001"
+    data-portal-url="http://localhost:7000"
+    data-api-url="http://localhost:7000"
+    data-currency="INR"
+    data-name="AuraGear Store"
+    data-theme-color="#6366f1"
+  ></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-badge">
+        <div class="brand-logo">⚡</div>
+        <div class="brand-info">
+          <h1>AuraGear</h1>
+          <div class="brand-tag">
+            <span class="pulse-dot"></span>
+            <span>YouPI Gateway Active</span>
+          </div>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <div class="status-chip">
+          <span>🛡️</span>
+          <span>0% Aggregator Fee</span>
+        </div>
+        <button class="cart-btn" onclick="buyQuickBox()">
+          <span>🛒 Instant Pay</span>
+          <span class="cart-count">UPI</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Experience <span class="gradient-text">Zero-Fee UPI</span> Payments In Real-Time</h2>
+      <p class="hero-subtitle">
+        This demo store is integrated with <strong>YOUPI PG V2</strong>. Test instant dynamic QR generation, WhatsApp pre-checkout verification, and banking observation detection below.
+      </p>
+
+      <div class="gateway-badges">
+        <span class="badge-item">⚡ Sub-Second QR Code</span>
+        <span class="badge-item">🛡️ Direct Bank Settlement</span>
+        <span class="badge-item">📱 Bank SMS / Gmail Observers</span>
+        <span class="badge-item">🔒 Zero Fee Forever</span>
+      </div>
+    </div>
+
+    <!-- QUICK TEST BOX -->
+    <div class="quick-test-box">
+      <div class="quick-box-title">⚡ Fast Test Terminal</div>
+      <div class="quick-amount-row">
+        <div>
+          <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:2px;">Amount</div>
+          <div class="price-huge" id="quickPriceDisplay">₹1.00</div>
+        </div>
+        <div class="chip-group">
+          <button class="chip active" onclick="setQuickAmount(1, this)">₹1</button>
+          <button class="chip" onclick="setQuickAmount(2, this)">₹2</button>
+          <button class="chip" onclick="setQuickAmount(5, this)">₹5</button>
+          <button class="chip" onclick="setQuickAmount(10, this)">₹10</button>
+        </div>
+      </div>
+
+      <button class="btn-primary-pay" onclick="buyQuickBox()" id="btnQuickPay">
+        <span>Pay with YOUPI Gateway</span>
+        <span>→</span>
+      </button>
+
+      <p class="quick-note">
+        Clicking launches the official <code>window.Youpi.pay()</code> modal
+      </p>
+    </div>
+  </section>
+
+  <!-- PRODUCTS CATALOG -->
+  <main class="section-container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Store Products Catalog</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">
+          Choose any product to test both the declarative button (<code>data-youpi-pay</code>) and programmatic API.
+        </p>
+      </div>
+    </div>
+
+    <!-- Products injected dynamically via app.js -->
+    <div class="products-grid" id="productsGrid"></div>
+
+    <!-- INTEGRATION INSPECTOR PANEL -->
+    <div class="inspector-panel">
+      <div class="inspector-header">
+        <div class="inspector-title">
+          <span>🔍</span>
+          <span>Developer Integration &amp; Live Telemetry</span>
+        </div>
+        <div class="inspector-tabs">
+          <button class="tab-btn active" onclick="switchTab('button', this)">1. HTML Button</button>
+          <button class="tab-btn" onclick="switchTab('js', this)">2. JavaScript SDK</button>
+          <button class="tab-btn" onclick="switchTab('webhook', this)">3. Node.js Webhook</button>
+        </div>
+      </div>
+
+      <pre class="code-box" id="codeBox">&lt;!-- 1. Include Script in &lt;head&gt; --&gt;
+&lt;script src="http://localhost:7000/youpi.js" data-youpi-key="YOUR_KEY"&gt;&lt;/script&gt;
+
+&lt;!-- 2. Zero-JS Button --&gt;
+&lt;button
+  data-youpi-pay
+  data-order-id="ORD-1001"
+  data-amount="499.00"
+  data-currency="INR"
+  data-name="Aura Store"&gt;
+  ⚡ Buy Now
+&lt;/button&gt;</pre>
+
+      <div style="margin-top:1.25rem;">
+        <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:0.5rem; display:flex; align-items:center; gap:6px;">
+          <span class="pulse-dot"></span>
+          <span>Live Browser CustomEvents Stream (youpi:payment:*)</span>
+        </div>
+        <div class="live-log-box" id="liveLogBox">
+          <div class="log-entry">
+            <span class="log-time">[System]</span>
+            <span class="log-type-info">[READY]</span>
+            <span>Waiting for payment interaction...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SUCCESS CELEBRATION MODAL -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal-card">
+      <div class="modal-check-icon">✓</div>
+      <h2 style="font-size:1.6rem; font-weight:800; margin-bottom:0.35rem;">Payment Verified!</h2>
+      <p style="font-size:0.88rem; color:var(--text-muted);">
+        Banking observers verified your credit via SMS / Gmail. Your order is confirmed!
+      </p>
+
+      <div class="receipt-card">
+        <div class="receipt-row">
+          <span style="color:var(--text-dim);">Order ID:</span>
+          <span id="modalOrderId" style="font-family:var(--font-mono); font-weight:600;">-</span>
+        </div>
+        <div class="receipt-row">
+          <span style="color:var(--text-dim);">Bank UTR:</span>
+          <span id="modalUtr" style="font-family:var(--font-mono); color:var(--accent-mint); font-weight:600;">-</span>
+        </div>
+        <div class="receipt-row">
+          <span style="color:var(--text-dim);">Gateway Fee:</span>
+          <span style="color:var(--accent-mint); font-weight:700;">₹0.00 (0%)</span>
+        </div>
+        <div class="receipt-row">
+          <span>Amount Paid:</span>
+          <span id="modalAmount" style="color:var(--accent-mint); font-size:1.1rem;">₹1.00</span>
+        </div>
+      </div>
+
+      <button class="btn-close-modal" onclick="closeModal()">
+        Done &amp; Close Receipt
+      </button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
